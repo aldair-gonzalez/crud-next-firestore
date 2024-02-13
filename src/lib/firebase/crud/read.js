@@ -1,4 +1,4 @@
-import { collection, getDocs, getDoc, doc } from "firebase/firestore";
+import { collection, getDocs, getDoc, doc, query } from "firebase/firestore";
 import { db } from "../firebase";
 
 export const getAllInstrumentos = async () => {
@@ -128,7 +128,19 @@ export const getAlumnoById = async (id) => {
   try {
     const docRef = doc(db, "alumnos", id);
     const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) return docSnap.data();
+    const collectionDeudasRef = collection(db, `alumnos/${id}/deudas`);
+    const queryDeudasSnap = await getDocs(collectionDeudasRef);
+    const collectionAsistenciasRef = collection(db, `alumnos/${id}/asistencias`);
+    const queryAsistenciasSnap = await getDocs(collectionAsistenciasRef);
+
+    const deudas = queryDeudasSnap.docs.map((doc) => {
+      return { id: doc.id, ...doc.data() };
+    })
+    const asistencias = queryAsistenciasSnap.docs.map((doc) => {
+      return { id: doc.id, ...doc.data() };
+    })
+
+    if (docSnap.exists()) return {...docSnap.data(), deudas, asistencias};
     else throw new Error("Alumno no encontrado");
   } catch (error) {
     console.error("Error getting alumno: ", error);
