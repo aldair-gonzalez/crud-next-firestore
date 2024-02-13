@@ -38,7 +38,6 @@ const Page = () => {
         }
         setData(alumnos);
       } else setData(null);
-      console.log(alumnos);
       setLoading(false);
     })();
   }, []);
@@ -51,7 +50,7 @@ const Page = () => {
         <>
           <h1>Alumnos</h1>
           {data.map((alumno) => (
-            <ul className="flex gap-5" key={alumno.id}>
+            <ul className="flex gap-5" key={alumno.id} onClick={() => router.push(`/alumnos/${alumno.id}`)} role="button">
               {alumno.usuario && (
                 <div>
                   <li>{alumno.usuario.nombre}</li>
