@@ -9,7 +9,7 @@ export const getAllInstrumentos = async () => {
     });
   } catch (error) {
     console.error("Error getting alumnos: ", error);
-    return [];
+    return null;
   }
 };
 
@@ -33,7 +33,7 @@ export const getAllRoles = async () => {
     });
   } catch (error) {
     console.error("Error getting roles: ", error);
-    return [];
+    return null;
   }
 };
 
@@ -61,7 +61,7 @@ export const getAllUsuarios = async () => {
     return usuarios;
   } catch (error) {
     console.error("Error getting usuarios: ", error);
-    return [];
+    return null;
   }
 };
 
@@ -92,7 +92,7 @@ export const getAllProfesores = async () => {
     return profesores;
   } catch (error) {
     console.error("Error getting profesores: ", error);
-    return [];
+    return null;
   }
 };
 
@@ -120,7 +120,7 @@ export const getAllAlumnos = async () => {
     return alumnos;
   } catch (error) {
     console.error("Error getting alumnos: ", error);
-    return [];
+    return null;
   }
 };
 
@@ -128,25 +128,40 @@ export const getAlumnoById = async (id) => {
   try {
     const docRef = doc(db, "alumnos", id);
     const docSnap = await getDoc(docRef);
+    const collectionAsistenciasRef = collection(
+      db,
+      `alumnos/${id}/asistencias`
+    );
+    const queryAsistenciasSnap = await getDocs(collectionAsistenciasRef);
     const collectionDeudasRef = collection(db, `alumnos/${id}/deudas`);
     const queryDeudasSnap = await getDocs(collectionDeudasRef);
-    const collectionAsistenciasRef = collection(db, `alumnos/${id}/asistencias`);
-    const queryAsistenciasSnap = await getDocs(collectionAsistenciasRef);
 
-    const deudas = queryDeudasSnap.docs.map((doc) => {
-      return { id: doc.id, ...doc.data() };
-    })
     const asistencias = queryAsistenciasSnap.docs.map((doc) => {
       return { id: doc.id, ...doc.data() };
-    })
+    });
+    const deudas = queryDeudasSnap.docs.map((doc) => {
+      return { id: doc.id, ...doc.data() };
+    });
+    
+    for (const deuda of deudas) {
+      const collectionDeudasPagosRef = collection(
+        db,
+        `alumnos/${id}/deudas/${deuda.id}/pagos`
+      );
+      const queryDeudasPagosSnap = await getDocs(collectionDeudasPagosRef);
+      const pagos = queryDeudasPagosSnap.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() };
+      });
+      deuda.pagos = pagos;
+    }
 
-    if (docSnap.exists()) return {...docSnap.data(), deudas, asistencias};
+    if (docSnap.exists()) return { ...docSnap.data(), deudas, asistencias };
     else throw new Error("Alumno no encontrado");
   } catch (error) {
     console.error("Error getting alumno: ", error);
     return null;
   }
-}
+};
 
 export const getAllClases = async () => {
   try {
@@ -156,7 +171,7 @@ export const getAllClases = async () => {
     });
   } catch (error) {
     console.error("Error getting clases: ", error);
-    return [];
+    return null;
   }
 };
 
@@ -170,4 +185,4 @@ export const getClaseById = async (id) => {
     console.error("Error getting clase: ", error);
     return null;
   }
-}
+};
