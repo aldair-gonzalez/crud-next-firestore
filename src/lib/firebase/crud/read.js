@@ -1,4 +1,4 @@
-import { collection, getDocs, getDoc, doc, query } from "firebase/firestore";
+import { collection, getDocs, getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 
 export const getAllInstrumentos = async () => {
