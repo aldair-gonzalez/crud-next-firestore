@@ -5,12 +5,12 @@ export default function Home() {return (
       CRUD
 
       <div className="flex items-center justify-center gap-5">
-        <Link href="/instrumentos">Ver instrumentos</Link>
-        <Link href="/roles">Ver roles</Link>
-        <Link href="/usuarios">Ver usuarios</Link>
-        <Link href="/profesores">Ver profesores</Link>
-        <Link href="/alumnos">Ver alumnos</Link>
-        <Link href="/clases">Ver clases</Link>
+        <Link href="/instrumentos">Instrumentos</Link>
+        <Link href="/roles">Roles</Link>
+        <Link href="/usuarios">Usuarios</Link>
+        <Link href="/profesores">Profesores</Link>
+        <Link href="/alumnos">Alumnos</Link>
+        <Link href="/clases">Clases</Link>
       </div>
     </main>
   );
