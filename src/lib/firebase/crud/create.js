@@ -21,7 +21,6 @@ export const createInstrumento = async (instrumento) => {
     if (docSnap) return { ...instrumento, id: docSnap.id };
     else throw new Error("Error al crear instrumento");
   } catch (error) {
-    console.log(error);
     return { error: error.message };
   }
 };
