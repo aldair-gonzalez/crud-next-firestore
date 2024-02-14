@@ -26,6 +26,26 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+.Input {
+  @apply grid grid-cols-1 gap-2 text-sm;
+}
+
+.Input label {
+  @apply text-gray-500;
+}
+
+.Input input {
+  @apply bg-inherit border border-gray-500 rounded-md px-2 py-1;
+}
+
+.Button {
+  @apply text-sm font-bold bg-blue-600 rounded-md py-2 px-4;
+}
+
+.Button-loading {
+  @apply opacity-50 pointer-events-none;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
