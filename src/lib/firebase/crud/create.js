@@ -9,7 +9,7 @@ export const createInstrumento = async (instrumento) => {
 
     if (!instrumento.nombre)
       throw new Error("El nombre del instrumento es obligatorio");
-    const docRef = collection(db, "pruebas");
+    const docRef = collection(db, "instrumentos");
     const q = query(docRef, where("nombre", "==", instrumento.nombre));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
