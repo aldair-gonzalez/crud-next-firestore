@@ -43,7 +43,11 @@ body {
 }
 
 .Input input {
-  @apply bg-inherit border border-gray-500 rounded-md px-2 py-1;
+  @apply bg-inherit border border-gray-500 rounded-md px-2 py-1 appearance-none;
+}
+
+.Input select {
+  @apply bg-inherit border border-gray-500 rounded-md px-2 py-1 appearance-none focus:bg-black;
 }
 
 .Button {
