@@ -16,11 +16,6 @@ const Page = () => {
             Ver todos los usuarios
           </Link>
         </li>
-        <li>
-          <Link className="Button" href="/usuarios/create">
-            Añadir usuario
-          </Link>
-        </li>
       </ul>
 
       <button onClick={() => router.back()}>Regresar</button>
