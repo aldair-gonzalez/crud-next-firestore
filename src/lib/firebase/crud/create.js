@@ -27,15 +27,14 @@ export const createInstrumento = async (instrumento) => {
 
 export const createProfesor = async (usuario) => {
   try {
-
     const setUser = {
       nombre: usuario.nombre,
       apellido: usuario.apellido,
       telefono: usuario.telefono,
       email: usuario.email,
       contrasena: usuario.contrasena,
-      rol: usuario.rol
-    }
+      rol: usuario.rol,
+    };
 
     const docRef = collection(db, "usuarios");
     const docProfesorRef = collection(db, "profesores");
@@ -55,7 +54,7 @@ export const createProfesor = async (usuario) => {
     const rolQuerySnapshot = await getDocs(rolQ);
     rolQuerySnapshot.forEach((data) => {
       setUser.rol = doc(db, `roles/${data.id}`);
-    })
+    });
 
     const docSnap = await addDoc(docRef, setUser);
     if (docSnap) {
@@ -64,7 +63,60 @@ export const createProfesor = async (usuario) => {
         instrumento: doc(db, `instrumentos/${usuario.instrumento}`),
       });
 
-      return { ...usuario, id_usuario: docSnap.id, id_profesor: docProfesorSnap.id };
+      return {
+        ...usuario,
+        id_usuario: docSnap.id,
+        id_profesor: docProfesorSnap.id,
+      };
+    }
+  } catch (error) {
+    return { error: error.message };
+  }
+};
+
+export const createAlumno = async (usuario) => {
+  try {
+    const setUser = {
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      telefono: usuario.telefono,
+      email: usuario.email,
+      contrasena: usuario.contrasena,
+      profesor: usuario.profesor,
+    };
+
+    const docRef = collection(db, "usuarios");
+    const docAlumnoRef = collection(db, "alumnos");
+
+    // Verificar que el usuario no exista
+    const q = query(docRef, where("email", "==", usuario.email));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      if (doc.data().email == usuario.email)
+        throw new Error("El usuario ya existe");
+    });
+
+    const rolRef = collection(db, "roles");
+
+    // Asignar el rol del alumno al usuario.
+    const rolQ = query(rolRef, where("nombre", "==", "alumno"));
+    const rolQuerySnapshot = await getDocs(rolQ);
+    rolQuerySnapshot.forEach((data) => {
+      setUser.rol = doc(db, `roles/${data.id}`);
+    });
+
+    const docSnap = await addDoc(docRef, setUser);
+    if (docSnap) {
+      const docAlumnoSnap = await addDoc(docAlumnoRef, {
+        profesor: doc(db, `profesores/${usuario.profesor}`),
+        usuario: doc(db, `usuarios/${docSnap.id}`),
+      });
+
+      return {
+        ...usuario,
+        id_usuario: docSnap.id,
+        id_alumno: docAlumnoSnap.id,
+      };
     }
   } catch (error) {
     return { error: error.message };
