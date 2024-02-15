@@ -26,6 +26,14 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+.Section {
+  @apply w-full flex flex-col items-center justify-center gap-10;
+}
+
+.Form {
+  @apply grid grid-cols-1 gap-5 place-content-center text-sm;
+}
+
 .Input {
   @apply grid grid-cols-1 gap-2 text-sm;
 }
