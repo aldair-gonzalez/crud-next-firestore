@@ -12,10 +12,10 @@ const Page = () => {
 
       <ul className="flex items-center justify-center gap-5">
         <li>
-          <Link href="/instrumentos/all">Ver todos los instrumentos</Link>
+          <Link className="Button" href="/instrumentos/all">Ver todos los instrumentos</Link>
         </li>
         <li>
-          <Link href="/instrumentos/create">Añadir instrumento</Link>
+          <Link className="Button" href="/instrumentos/create">Añadir instrumento</Link>
         </li>
       </ul>
 

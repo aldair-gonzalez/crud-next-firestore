@@ -12,7 +12,7 @@ const Page = () => {
 
       <ul className="flex items-center justify-center gap-5">
         <li>
-          <Link href="/roles/all">Ver todos los roles</Link>
+          <Link className="Button" href="/roles/all">Ver los roles disponibles</Link>
         </li>
       </ul>
 
