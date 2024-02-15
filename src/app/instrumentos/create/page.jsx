@@ -21,12 +21,11 @@ const Page = () => {
   };
 
   return (
-    <section className="w-full flex flex-col items-center justify-center gap-10">
+    <section className="Section">
       <h1>Nuevo instrumento</h1>
 
       <form
-        action="w-full"
-        className="grid grid-cols-1 gap-5 place-content-center text-sm"
+        className="Form"
         onSubmit={handleSubmit}
       >
         <div>
