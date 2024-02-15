@@ -26,14 +26,13 @@ const Page = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setPostLoading(true)
+    setPostLoading(true);
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData);
-    const fetch = await createProfesor(data)
-    console.log(fetch)
-    // if(!fetch.error) e.target.reset()
-    // else alert(fetch.error)
-    setPostLoading(false)
+    const fetch = await createProfesor(data);
+    if (!fetch.error) e.target.reset();
+    else alert(fetch.error);
+    setPostLoading(false);
   };
 
   return (
@@ -48,26 +47,15 @@ const Page = () => {
             <div className="grid grid-cols-2 gap-5">
               <div className="Input">
                 <label htmlFor="nombre">Nombre</label>
-                <input
-                  defaultValue="Aldair"
-                  type="text"
-                  name="nombre"
-                  required
-                />
+                <input type="text" name="nombre" required />
               </div>
               <div className="Input">
                 <label htmlFor="apellido">Apellido</label>
-                <input
-                  defaultValue="González"
-                  type="text"
-                  name="apellido"
-                  required
-                />
+                <input type="text" name="apellido" required />
               </div>
               <div className="Input">
                 <label htmlFor="telefono">Teléfono</label>
                 <input
-                  defaultValue="999-999-9999"
                   type="tel"
                   pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                   placeholder="Formato: 000-000-0000"
@@ -80,21 +68,11 @@ const Page = () => {
               </div>
               <div className="Input">
                 <label htmlFor="email">Email</label>
-                <input
-                  defaultValue="aldairgome97@gmail.com"
-                  type="email"
-                  name="email"
-                  required
-                />
+                <input type="email" name="email" required />
               </div>
               <div className="Input">
                 <label htmlFor="contrasena">Contraseña</label>
-                <input
-                  defaultValue="123"
-                  type="password"
-                  name="contrasena"
-                  required
-                />
+                <input type="password" name="contrasena" required />
               </div>
 
               <div className="Input">
