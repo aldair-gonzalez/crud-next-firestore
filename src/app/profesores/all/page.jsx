@@ -18,8 +18,7 @@ const Page = () => {
 
   const columnas = [
     "id",
-    "nombre",
-    "apellido",
+    "nombre completo",
     "telefono",
     "email",
     "instrumento",
@@ -53,8 +52,7 @@ const Page = () => {
             {data.map((profesor) => (
               <tr key={profesor.id} className="Row">
                 <td>{profesor.id}</td>
-                <td>{profesor.usuario.nombre}</td>
-                <td>{profesor.usuario.apellido}</td>
+                <td>{profesor.usuario.nombre} {profesor.usuario.apellido}</td>
                 <td>{profesor.usuario.telefono}</td>
                 <th scope="row">{profesor.usuario.email}</th>
                 <td>{profesor.instrumento.nombre}</td>

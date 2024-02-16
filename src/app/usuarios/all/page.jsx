@@ -12,7 +12,7 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const columns = ["id", "nombre", "apellido", "telefono", "email", "rol"];
+  const columns = ["id", "nombre completo", "telefono", "email", "rol"];
 
   useEffect(() => {
     (async () => {
@@ -39,8 +39,7 @@ const Page = () => {
             {data.map((usuario) => (
               <tr key={usuario.id} className="Row">
                 <td>{usuario.id}</td>
-                <td>{usuario.nombre}</td>
-                <td>{usuario.apellido}</td>
+                <td>{usuario.nombre} {usuario.apellido}</td>
                 <td>{usuario.telefono}</td>
                 <th scope="row">{usuario.email}</th>
                 <td>{usuario.rol.nombre}</td>
