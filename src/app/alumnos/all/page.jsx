@@ -11,11 +11,21 @@ import {
   getUsuarioById,
 } from "@/lib/firebase/crud/read";
 import Loader from "../../components/Loader";
+import Tabla from "@/app/components/Tabla";
 
 const Page = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  const columnas = [
+    "id",
+    "nombre completo",
+    "telefono",
+    "email",
+    "profesor",
+    "acciones",
+  ];
 
   useEffect(() => {
     (async () => {
@@ -43,57 +53,38 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center flex-col gap-10">
+    <section className="Section">
       {loading ? (
         <Loader />
       ) : data !== null ? (
         <>
-          <h1>Alumnos</h1>
-          {data.map((alumno) => (
-            <ul className="flex gap-5" key={alumno.id} onClick={() => router.push(`/alumnos/all/${alumno.id}`)} role="button">
-              {alumno.usuario && (
-                <div>
-                  <li>{alumno.usuario.nombre}</li>
-                  <li>{alumno.usuario.apellido}</li>
-                  <li>{alumno.usuario.email}</li>
-                  <li>{alumno.usuario.telefono}</li>
-                  <li>
-                    {alumno.usuario.rol
-                      ? alumno.usuario.rol.nombre
-                      : "Rol no encontrado"}
-                  </li>
-                </div>
-              )}
-              {alumno.profesor && (
-                <ul className="text-sm text-white text-opacity-50">
-                  <li>{alumno.profesor.usuario.nombre}</li>
-                  <li>{alumno.profesor.usuario.apellido}</li>
-                  <li>{alumno.profesor.usuario.email}</li>
-                  <li>{alumno.profesor.usuario.telefono}</li>
-                  <li>
-                    {alumno.profesor.usuario.rol
-                      ? alumno.profesor.usuario.rol.nombre
-                      : "Rol no encontrado"}
-                  </li>
-                  <li>
-                    {alumno.profesor.instrumento
-                      ? alumno.profesor.instrumento.nombre
-                      : "Instrumento no encontrado"}
-                  </li>
-                </ul>
-              )}
-            </ul>
-          ))}
-          <button onClick={() => router.back()}>Regresar</button>
+          <Tabla title="Alumnos registrados" columns={columnas}>
+            {data.map((alumno) => (
+              <tr key={alumno.id} className="Row">
+                <td>{alumno.id}</td>
+                <td>
+                  {alumno.usuario.nombre} {alumno.usuario.apellido}
+                </td>
+                <td>{alumno.usuario.telefono}</td>
+                <th scope="row">{alumno.usuario.email}</th>
+                <td>
+                  {alumno.profesor.usuario.nombre}{" "}
+                  {alumno.profesor.usuario.apellido} (
+                  {alumno.profesor.instrumento.nombre})
+                </td>
+                <td>
+                  <button className="Button">Ver</button>
+                </td>
+              </tr>
+            ))}
+          </Tabla>
         </>
       ) : (
-        <>
-          <h1>Alumnos</h1>
-          <p>No hay alumnos registrados</p>
-          <button onClick={() => router.back()}>Regresar</button>
-        </>
+        <p>No hay alumnos registrados</p>
       )}
-    </div>
+
+      {!loading ? <button onClick={() => router.back()}>Regresar</button> : ""}
+    </section>
   );
 };
 export default Page;
