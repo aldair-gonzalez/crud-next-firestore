@@ -38,39 +38,43 @@ const Page = () => {
         alumno.usuario = await getUsuarioById(alumno.usuario.id);
         alumno.usuario.rol = await getRolById(alumno.usuario.rol.id);
 
-        const asistencias = alumno.asistencias;
-        for (const asistencia of asistencias) {
-          asistencia.clase = await getClaseById(asistencia.clase.id);
-          const fecha = new Date(asistencia.clase.fecha.seconds * 1000);
-          asistencia.clase.fecha = `${fecha.getDate()}/${
-            fecha.getMonth() + 1
-          }/${fecha.getFullYear()}`;
-          asistencia.clase.profesor = await getProfesorById(
-            asistencia.clase.profesor.id
-          );
-          asistencia.clase.profesor.usuario = await getUsuarioById(
-            asistencia.clase.profesor.usuario.id
-          );
-          asistencia.clase.profesor.usuario.rol = await getRolById(
-            asistencia.clase.profesor.usuario.rol.id
-          );
-          asistencia.clase.profesor.instrumento = await getInstrumentoById(
-            asistencia.clase.profesor.instrumento.id
-          );
+        if (alumno.asistencias) {
+          const asistencias = alumno.asistencias;
+          for (const asistencia of asistencias) {
+            asistencia.clase = await getClaseById(asistencia.clase.id);
+            const fecha = new Date(asistencia.clase.fecha.seconds * 1000);
+            asistencia.clase.fecha = `${fecha.getDate()}/${
+              fecha.getMonth() + 1
+            }/${fecha.getFullYear()}`;
+            asistencia.clase.profesor = await getProfesorById(
+              asistencia.clase.profesor.id
+            );
+            asistencia.clase.profesor.usuario = await getUsuarioById(
+              asistencia.clase.profesor.usuario.id
+            );
+            asistencia.clase.profesor.usuario.rol = await getRolById(
+              asistencia.clase.profesor.usuario.rol.id
+            );
+            asistencia.clase.profesor.instrumento = await getInstrumentoById(
+              asistencia.clase.profesor.instrumento.id
+            );
+          }
         }
-        const deudas = alumno.deudas;
-        for (const deuda of deudas) {
-          const fecha = new Date(deuda.fecha.seconds * 1000);
-          deuda.fecha = `${fecha.getDate()}/${
-            fecha.getMonth() + 1
-          }/${fecha.getFullYear()}`;
+        if (alumno.deudas) {
+          const deudas = alumno.deudas;
+          for (const deuda of deudas) {
+            const fecha = new Date(deuda.fecha.seconds * 1000);
+            deuda.fecha = `${fecha.getDate()}/${
+              fecha.getMonth() + 1
+            }/${fecha.getFullYear()}`;
 
-          const pagos = deuda.pagos;
-          for (const pago of pagos) {
-            const fechaPago = new Date(pago.fecha.seconds * 1000);
-            pago.fecha = `${fechaPago.getDate()}/${
-              fechaPago.getMonth() + 1
-            }/${fechaPago.getFullYear()}`;
+            const pagos = deuda.pagos;
+            for (const pago of pagos) {
+              const fechaPago = new Date(pago.fecha.seconds * 1000);
+              pago.fecha = `${fechaPago.getDate()}/${
+                fechaPago.getMonth() + 1
+              }/${fechaPago.getFullYear()}`;
+            }
           }
         }
         setData(alumno);
@@ -138,14 +142,13 @@ const Page = () => {
                 <li>{deuda.fecha}</li>
                 <li>{deuda.monto_total}</li>
                 <li>{deuda.estado}</li>
-                {
-                  deuda.pagos && deuda.pagos.map((pago) => (
+                {deuda.pagos &&
+                  deuda.pagos.map((pago) => (
                     <ul key={pago.id}>
                       <li>{pago.fecha}</li>
                       <li>{pago.monto_pagado}</li>
                     </ul>
-                  ))
-                }
+                  ))}
               </ul>
             ))}
           </div>
