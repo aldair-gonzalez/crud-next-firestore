@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../../components/Loader";
 import Tabla from "@/app/components/Tabla";
+import Link from "next/link";
 
 const Page = () => {
   const [data, setData] = useState(null);
@@ -58,7 +59,12 @@ const Page = () => {
                 <th scope="row">{profesor.usuario.email}</th>
                 <td>{profesor.instrumento.nombre}</td>
                 <td>
-                  <button className="Button" onClick={() => router.push(`/profesores/all/${profesor.id}`)}>Ver</button>
+                  <Link
+                    className="Button"
+                    href={`/profesores/all/${profesor.id}`}
+                  >
+                    Ver
+                  </Link>
                 </td>
               </tr>
             ))}

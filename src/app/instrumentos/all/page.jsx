@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { getAllInstrumentos } from "@/lib/firebase/crud/read";
 import Loader from "../../components/Loader";
 import Tabla from "@/app/components/Tabla";
+import Link from "next/link";
 
 const Page = () => {
   const [data, setData] = useState(null);
@@ -42,14 +43,12 @@ const Page = () => {
                 <td>{instrumento.id}</td>
                 <th scope="row">{instrumento.nombre}</th>
                 <td>
-                  <button
+                  <Link
+                    href={`/instrumentos/all/${instrumento.id}`}
                     className="Button"
-                    onClick={() =>
-                      router.push(`/instrumentos/all/${instrumento.id}`)
-                    }
                   >
                     Ver detalles
-                  </button>
+                  </Link>
                 </td>
               </tr>
             ))}
