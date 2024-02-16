@@ -1,14 +1,15 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-const Page = () => {
-  const { id } = useParams();
-  const router = useRouter()
+const Page = ({ params }) => {
+  const router = useRouter();
 
   return (
     <section className="Section">
-      <h1>Clase {id}</h1>
+      <h1>Clase {params.id}</h1>
+
+      <button className="Button" onClick={() => router.push(`/clases/all/${params.id}/update`)}>Actualizar clase</button>
 
       <button onClick={() => router.back()}>Regresar</button>
     </section>
