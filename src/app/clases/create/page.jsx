@@ -29,7 +29,6 @@ const Page = () => {
           );
         }
         setProfesores(fetchProfesores);
-        console.log(fetchProfesores);
       } else setProfesores(null);
       setLoading(false);
     })();
