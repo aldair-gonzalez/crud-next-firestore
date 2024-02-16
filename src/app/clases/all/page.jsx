@@ -10,11 +10,23 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../../components/Loader";
+import Tabla from "@/app/components/Tabla";
+import Link from "next/link";
 
 const Page = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  const columnas = [
+    "id",
+    "fecha",
+    "hora de inicio",
+    "hora de finzalización",
+    "profesor",
+    "estado",
+    "acciones",
+  ];
 
   useEffect(() => {
     (async () => {
@@ -23,7 +35,9 @@ const Page = () => {
       if (clases !== null && clases.length > 0) {
         for (const clase of clases) {
           const fecha = new Date(clase.fecha.seconds * 1000);
-          clase.fecha = `${fecha.getDate()}/${fecha.getMonth() + 1}/${fecha.getFullYear()}`;
+          clase.fecha = `${fecha.getDate()}/${
+            fecha.getMonth() + 1
+          }/${fecha.getFullYear()}`;
           clase.profesor = await getProfesorById(clase.profesor.id);
           clase.profesor.usuario = await getUsuarioById(
             clase.profesor.usuario.id
@@ -47,39 +61,31 @@ const Page = () => {
         <Loader />
       ) : data !== null ? (
         <>
-          <h1>Clases</h1>
-          {data.map((clase) => (
-            <ul className="flex gap-5 cursor-pointer" key={clase.id} onClick={() => router.push(`/clases/all/${clase.id}`)}>
-              <div>
-                <li>{clase.fecha}</li>
-                <li>{clase.hora_inicio}</li>
-                <li>{clase.hora_fin}</li>
-                <li>{clase.status}</li>
-              </div>
-              {clase.profesor && (
-                <ul className="text-sm text-white text-opacity-50">
-                  <li>{clase.profesor.usuario.nombre}</li>
-                  <li>{clase.profesor.usuario.apellido}</li>
-                  <li>{clase.profesor.usuario.email}</li>
-                  <li>
-                    {clase.profesor.usuario.rol
-                      ? clase.profesor.usuario.rol.nombre
-                      : "No se encontró el rol"}
-                  </li>
-                  <li>{clase.profesor.instrumento.nombre}</li>
-                </ul>
-              )}
-            </ul>
-          ))}
-          <button onClick={() => router.back()}>Regresar</button>
+          <Tabla title="Clases registradas" columns={columnas}>
+            {data.map((clase) => (
+              <tr key={clase.id} className="Row">
+                <td>{clase.id}</td>
+                <td>{clase.fecha}</td>
+                <td>{clase.hora_inicio}</td>
+                <td>{clase.hora_fin}</td>
+                <td>
+                  {clase.profesor.usuario.nombre}{" "}
+                  {clase.profesor.usuario.apellido} (
+                  {clase.profesor.instrumento.nombre})
+                </td>
+                <th scope="row">{clase.status}</th>
+                <td>
+                  <Link href={`/clases/all/${clase.id}`} className="Button">Ver</Link>
+                </td>
+              </tr>
+            ))}
+          </Tabla>
         </>
       ) : (
-        <>
-          <h1>Clases</h1>
-          <p>No hay clases</p>
-          <button onClick={() => router.back()}>Regresar</button>
-        </>
+        <p>No hay clases</p>
       )}
+
+      {!loading ? <button onClick={() => router.back()}>Regresar</button> : ""}
     </div>
   );
 };
