@@ -9,7 +9,7 @@ import Tabla from "@/app/components/Tabla";
 
 const Page = () => {
   const [data, setData] = useState(null);
-  const [colums, setColums] = useState(null);
+  const [columns, setColumns] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -21,7 +21,7 @@ const Page = () => {
         for (const instrumento of instrumentos) {
           const arrayColumns = Object.keys(instrumento);
           arrayColumns.push("Acción");
-          setColums(arrayColumns);
+          setColumns(arrayColumns);
           break;
         }
         setData(instrumentos);
@@ -36,7 +36,7 @@ const Page = () => {
         <Loader />
       ) : data !== null ? (
         <>
-          <Tabla columns={colums}>
+          <Tabla columns={columns}>
             {data.map((instrumento) => (
               <tr className="Row"
                 key={instrumento.id}
