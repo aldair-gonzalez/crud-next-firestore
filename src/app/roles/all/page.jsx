@@ -5,18 +5,26 @@ import { useEffect, useState } from "react";
 
 import { getAllRoles } from "@/lib/firebase/crud/read";
 import Loader from "../../components/Loader";
+import Tabla from "@/app/components/Tabla";
 
 const Page = () => {
   const [data, setData] = useState(null);
+  const [columns, setColumns] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const data = await getAllRoles();
-      if (data !== null && data.length > 0) setData(data);
-      else setData(null);
+      const roles = await getAllRoles();
+      if (roles !== null && roles.length > 0) {
+        for (const rol of roles) {
+          const arrayColumns = Object.keys(rol);
+          setColumns(arrayColumns);
+          break
+        }
+        setData(roles);
+      } else setData(null);
       setLoading(false);
     })();
   }, []);
@@ -27,21 +35,20 @@ const Page = () => {
         <Loader />
       ) : data !== null ? (
         <>
-          <h1>Roles</h1>
-          {data.map((rol) => (
-            <ul key={rol.id}>
-              <li key={rol.id}>{rol.nombre}</li>
-            </ul>
-          ))}
-          <button onClick={() => router.back()}>Regresar</button>
+          <Tabla title="Roles registrados" columns={columns}>
+            {data.map((rol) => (
+              <tr key={rol.id} className="Row">
+                <td>{rol.id}</td>
+                <th scope="row">{rol.nombre}</th>
+              </tr>
+            ))}
+          </Tabla>
         </>
       ) : (
-        <>
-          <h1>Roles</h1>
-          <p>No hay roles</p>
-          <button onClick={() => router.back()}>Regresar</button>
-        </>
+        <p>No hay roles</p>
       )}
+
+      <button onClick={() => router.back()}>Regresar</button>
     </section>
   );
 };
