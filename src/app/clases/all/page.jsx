@@ -49,7 +49,7 @@ const Page = () => {
         <>
           <h1>Clases</h1>
           {data.map((clase) => (
-            <ul className="flex gap-5" key={clase.id}>
+            <ul className="flex gap-5 cursor-pointer" key={clase.id} onClick={() => router.push(`/clases/all/${clase.id}`)}>
               <div>
                 <li>{clase.fecha}</li>
                 <li>{clase.hora_inicio}</li>
