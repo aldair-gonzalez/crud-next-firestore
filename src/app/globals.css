@@ -51,11 +51,21 @@ body {
 }
 
 .Button {
-  @apply text-sm font-bold bg-blue-600 rounded-md py-2 px-4;
+  @apply text-sm font-bold bg-blue-600 text-white hover:opacity-80 rounded-md py-2 px-4;
 }
 
 .Button-loading {
   @apply opacity-50 pointer-events-none;
+}
+
+.Row {
+  @apply odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700;
+}
+.Row td {
+  @apply px-6 py-4;
+}
+.Row th {
+  @apply px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white
 }
 
 @layer utilities {
