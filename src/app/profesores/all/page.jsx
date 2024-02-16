@@ -8,11 +8,22 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../../components/Loader";
+import Tabla from "@/app/components/Tabla";
 
 const Page = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  const columnas = [
+    "id",
+    "nombre",
+    "apellido",
+    "telefono",
+    "email",
+    "instrumento",
+    "acciones",
+  ];
 
   useEffect(() => {
     (async () => {
@@ -37,25 +48,27 @@ const Page = () => {
         <Loader />
       ) : data !== null ? (
         <>
-          <h1>Profesores</h1>
-          {data.map((profesor) => (
-            <ul key={profesor.id}>
-              <li>{profesor.usuario.nombre}</li>
-              <li>{profesor.usuario.apellido}</li>
-              <li>{profesor.usuario.email}</li>
-              <li>{profesor.usuario.telefono}</li>
-              {profesor.instrumento && <li>{profesor.instrumento.nombre}</li>}
-            </ul>
-          ))}
-          <button onClick={() => router.back()}>Regresar</button>
+          <Tabla title="Profesores registrados" columns={columnas}>
+            {data.map((profesor) => (
+              <tr key={profesor.id} className="Row">
+                <td>{profesor.id}</td>
+                <td>{profesor.usuario.nombre}</td>
+                <td>{profesor.usuario.apellido}</td>
+                <td>{profesor.usuario.telefono}</td>
+                <th scope="row">{profesor.usuario.email}</th>
+                <td>{profesor.instrumento.nombre}</td>
+                <td>
+                  <button className="Button" onClick={() => router.push(`/profesores/all/${profesor.id}`)}>Ver</button>
+                </td>
+              </tr>
+            ))}
+          </Tabla>
         </>
       ) : (
-        <>
-          <h1>Profesores</h1>
-          <p>No hay profesores</p>
-          <button onClick={() => router.back()}>Regresar</button>
-        </>
+        <p>No hay profesores</p>
       )}
+
+      {!loading ? <button onClick={() => router.back()}>Regresar</button> : ""}
     </div>
   );
 };
