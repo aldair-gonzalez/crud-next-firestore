@@ -38,13 +38,18 @@ const Page = () => {
         <>
           <Tabla title="Instrumentos registrados" columns={columns}>
             {data.map((instrumento) => (
-              <tr className="Row"
-                key={instrumento.id}
-              >
+              <tr className="Row" key={instrumento.id}>
                 <td>{instrumento.id}</td>
                 <th scope="row">{instrumento.nombre}</th>
                 <td>
-                  <button className="Button" onClick={() => router.push(`/instrumentos/all/${instrumento.id}`)}>Ver detalles</button>
+                  <button
+                    className="Button"
+                    onClick={() =>
+                      router.push(`/instrumentos/all/${instrumento.id}`)
+                    }
+                  >
+                    Ver detalles
+                  </button>
                 </td>
               </tr>
             ))}
@@ -54,7 +59,7 @@ const Page = () => {
         <p>No hay instrumentos</p>
       )}
 
-      <button onClick={() => router.back()}>Regresar</button>
+      {!loading ? <button onClick={() => router.back()}>Regresar</button> : ""}
     </section>
   );
 };

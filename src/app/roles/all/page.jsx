@@ -21,7 +21,7 @@ const Page = () => {
         for (const rol of roles) {
           const arrayColumns = Object.keys(rol);
           setColumns(arrayColumns);
-          break
+          break;
         }
         setData(roles);
       } else setData(null);
@@ -48,7 +48,7 @@ const Page = () => {
         <p>No hay roles</p>
       )}
 
-      <button onClick={() => router.back()}>Regresar</button>
+      {!loading ? <button onClick={() => router.back()}>Regresar</button> : ""}
     </section>
   );
 };
