@@ -36,7 +36,7 @@ const Page = () => {
         <Loader />
       ) : data !== null ? (
         <>
-          <Tabla columns={columns}>
+          <Tabla title="Instrumentos registrados" columns={columns}>
             {data.map((instrumento) => (
               <tr className="Row"
                 key={instrumento.id}
