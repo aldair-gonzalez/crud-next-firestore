@@ -1,4 +1,11 @@
-import { addDoc, collection, doc, getDocs, query } from "firebase/firestore";
+import {
+  Timestamp,
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { where } from "firebase/firestore";
 
@@ -119,6 +126,20 @@ export const createAlumno = async (usuario) => {
       };
     }
   } catch (error) {
+    return { error: error.message };
+  }
+};
+
+export const createClase = async (clase) => {
+  try {
+    clase.profesor = doc(db, `profesores/${clase.profesor}`);
+    clase.fecha = Timestamp.fromDate(new Date(clase.fecha));
+    const docRef = collection(db, "clases");
+    const docSnap = await addDoc(docRef, clase);
+    if (docSnap) return { ...clase, id: docSnap.id };
+    else throw new Error("Error al crear clase");
+  } catch (error) {
+    console.log(error);
     return { error: error.message };
   }
 };
