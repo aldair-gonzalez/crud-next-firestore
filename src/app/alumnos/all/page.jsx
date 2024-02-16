@@ -12,6 +12,7 @@ import {
 } from "@/lib/firebase/crud/read";
 import Loader from "../../components/Loader";
 import Tabla from "@/app/components/Tabla";
+import Link from "next/link";
 
 const Page = () => {
   const [data, setData] = useState(null);
@@ -73,7 +74,7 @@ const Page = () => {
                   {alumno.profesor.instrumento.nombre})
                 </td>
                 <td>
-                  <button className="Button">Ver</button>
+                  <Link className="Button" href={`/alumnos/all/${alumno.id}`}>Ver</Link>
                 </td>
               </tr>
             ))}
