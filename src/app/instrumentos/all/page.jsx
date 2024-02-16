@@ -31,7 +31,7 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center flex-col gap-10">
+    <section className="Section">
       {loading ? (
         <Loader />
       ) : data !== null ? (
@@ -55,7 +55,7 @@ const Page = () => {
       )}
 
       <button onClick={() => router.back()}>Regresar</button>
-    </div>
+    </section>
   );
 };
 export default Page;
