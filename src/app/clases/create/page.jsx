@@ -43,7 +43,6 @@ const Page = () => {
     const fetch = await createClase(data)
     if (!fetch.error) e.target.reset()
     else alert(fetch.error)
-    console.log(fetch)
     setPostLoading(false);
   };
 
