@@ -5,11 +5,14 @@ import { useEffect, useState } from "react";
 
 import { getAllUsuarios, getRolById } from "@/lib/firebase/crud/read";
 import Loader from "../../components/Loader";
+import Tabla from "@/app/components/Tabla";
 
 const Page = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  const columns = ["id", "nombre", "apellido", "telefono", "email", "rol"];
 
   useEffect(() => {
     (async () => {
@@ -27,35 +30,30 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center flex-col gap-10">
+    <section className="Section">
       {loading ? (
         <Loader />
-      ) : (
-        data !== null ? (
-          <>
-            <h1>Usuarios</h1>
+      ) : data !== null ? (
+        <>
+          <Tabla title="Usuarios registrados" columns={columns}>
             {data.map((usuario) => (
-              <ul key={usuario.id}>
-                <li>{usuario.nombre}</li>
-                <li>{usuario.apellido}</li>
-                <li>{usuario.email}</li>
-                <li>{usuario.telefono}</li>
-                <li>
-                  {usuario.rol ? usuario.rol.nombre : "Rol no encontrado"}
-                </li>
-              </ul>
+              <tr key={usuario.id} className="Row">
+                <td>{usuario.id}</td>
+                <td>{usuario.nombre}</td>
+                <td>{usuario.apellido}</td>
+                <td>{usuario.telefono}</td>
+                <th scope="row">{usuario.email}</th>
+                <td>{usuario.rol.nombre}</td>
+              </tr>
             ))}
-            <button onClick={() => router.back()}>Regresar</button>
-          </>
-        ) : (
-          <>
-            <h1>Usuarios</h1>
-            <p>No se encontraron usuarios</p>
-            <button onClick={() => router.back()}>Regresar</button>
-          </>
-        )
+          </Tabla>
+        </>
+      ) : (
+        <p>No se encontraron usuarios</p>
       )}
-    </div>
+
+      {!loading ? <button onClick={() => router.back()}>Regresar</button> : ""}
+    </section>
   );
 };
 export default Page;
