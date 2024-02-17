@@ -6,13 +6,21 @@ import { useEffect, useState } from "react";
 import { getAllUsuarios, getRolById } from "@/lib/firebase/crud/read";
 import Loader from "../../components/Loader";
 import Tabla from "@/app/components/Tabla";
+import Link from "next/link";
 
 const Page = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const columns = ["id", "nombre completo", "telefono", "email", "rol"];
+  const columns = [
+    "id",
+    "nombre completo",
+    "telefono",
+    "email",
+    "rol",
+    "acciones",
+  ];
 
   useEffect(() => {
     (async () => {
@@ -39,10 +47,15 @@ const Page = () => {
             {data.map((usuario) => (
               <tr key={usuario.id} className="Row">
                 <td>{usuario.id}</td>
-                <td>{usuario.nombre} {usuario.apellido}</td>
+                <td>
+                  {usuario.nombre} {usuario.apellido}
+                </td>
                 <td>{usuario.telefono}</td>
                 <th scope="row">{usuario.email}</th>
                 <td>{usuario.rol.nombre}</td>
+                <td>
+                  <Link className="Button" href={`/usuarios/all/${usuario.id}`}>Ver</Link>
+                </td>
               </tr>
             ))}
           </Tabla>
