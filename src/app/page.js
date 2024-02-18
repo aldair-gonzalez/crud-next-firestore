@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-export default function Home() {return (
+export default function Home() {
+  return (
     <main className="flex items-center justify-center flex-col gap-10">
       CRUD
-
       <div className="flex items-center justify-center gap-5">
         <Link href="/instrumentos">Instrumentos</Link>
         <Link href="/roles">Roles</Link>
