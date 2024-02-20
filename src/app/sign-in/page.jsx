@@ -16,16 +16,12 @@ const Page = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await signIn({ email, password });
-      if (res?.error && res?.code === "auth/invalid-credential")
-        alert("Las credenciales no coinciden.");
-      else {
-        setEmail("");
-        setPassword("");
-        router.push("/");
-      }
+      await signIn({ email, password });
+      setEmail("");
+      setPassword("");
+      router.push("/");
     } catch (error) {
-      console.log(error);
+      alert(error.message);
     }
     setLoading(false);
   };
