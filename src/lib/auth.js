@@ -23,35 +23,29 @@ export const signUp = async (user) => {
     const firebaseUser = createdUser.user;
     auth.currentUser = firebaseUser;
 
-    // Almacena los datos del usuario en la colección 'usuarios'
     await setDoc(doc(db, "usuarios", firebaseUser.uid), {
       email,
       ...rest,
       rol: doc(db, "roles", rolAsigned.id),
     });
 
-    // Decide en qué colección almacenar la referencia del usuario
     let collection;
     let additionalData = {};
     switch (rolAsigned.nombre) {
       case "profesor":
         collection = "profesores";
-        // Aquí puedes agregar los campos adicionales para el profesor
         additionalData = {
           instrumento: doc(db, "instrumentos", user?.instrumento),
         };
         break;
       case "alumno":
         collection = "alumnos";
-        // Aquí puedes agregar los campos adicionales para el alumno
         additionalData = { profesor: doc(db, "profesores", user?.profesor) };
         break;
       default:
-        // No necesitamos almacenar una referencia para los administradores
         return;
     }
 
-    // Almacena la referencia del usuario y los datos adicionales en la colección correspondiente
     await setDoc(doc(db, collection, firebaseUser.uid), {
       usuario: doc(db, "usuarios", firebaseUser.uid),
       ...additionalData,
@@ -66,7 +60,7 @@ export const verifyEmail = async () => {
   try {
     await sendEmailVerification(auth.currentUser);
   } catch (error) {
-    return { error: error.message, code: error.code };
+    throw error;
   }
 };
 
@@ -104,7 +98,7 @@ export const logOut = async () => {
     await signOut(auth);
     cookies().delete("user");
   } catch (error) {
-    return { error: error.message, code: error.code };
+    throw error;
   }
   return true;
 };
