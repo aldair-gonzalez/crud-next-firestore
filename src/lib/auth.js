@@ -11,9 +11,23 @@ import { cookies } from "next/headers";
 
 import { auth, db } from "./firebase/firebase";
 
-export const signUp = async (user) => {
+/**
+ * Función para registrar un nuevo usuario.
+ * Crea un nuevo usuario con correo electrónico y contraseña utilizando Firebase Authentication.
+ * Almacena la información del usuario en la colección 'usuarios' de Firestore.
+ * Dependiendo del rol del usuario, almacena una referencia a ese usuario en la colección correspondiente ('profesores' o 'alumnos').
+ * Envía un correo electrónico de verificación al usuario.
+ *
+ * @param {Object} user - El objeto del usuario.
+ * @param {string} user.email - El correo electrónico del usuario.
+ * @param {string} user.password - La contraseña del usuario.
+ * @param {Object} user.rolAsigned - El rol asignado al usuario.
+ * @throws {Error} Si ocurre un error durante el proceso de registro.
+ * @param {...any} user.rest - Otros datos del usuario.
+ */
+
+export const signUp = async ({ email, password, rolAsigned, ...rest }) => {
   try {
-    const { email, password, rolAsigned, ...rest } = user;
     const createdUser = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -56,6 +70,10 @@ export const signUp = async (user) => {
   }
 };
 
+/**
+ * Función para enviar un correo electrónico de verificación al usuario actual.
+ * Utiliza Firebase Authentication para enviar el correo electrónico de verificación.
+ */
 export const verifyEmail = async () => {
   try {
     await sendEmailVerification(auth.currentUser);
@@ -64,6 +82,15 @@ export const verifyEmail = async () => {
   }
 };
 
+/**
+ * Función para iniciar sesión de un usuario.
+ * Inicia sesión con correo electrónico y contraseña utilizando Firebase Authentication.
+ * Obtiene el rol del usuario de Firestore y lo almacena en una cookie junto con otros datos de la sesión del usuario.
+ *
+ * @param {Object} param0 - El objeto con el correo electrónico y la contraseña del usuario.
+ * @param {string} param0.email - El correo electrónico del usuario.
+ * @param {string} param0.password - La contraseña del usuario.
+ */
 export const signIn = async ({ email, password }) => {
   try {
     const userSigned = await signInWithEmailAndPassword(auth, email, password);
@@ -93,6 +120,10 @@ export const signIn = async ({ email, password }) => {
   }
 };
 
+/**
+ * Función para cerrar la sesión del usuario actual.
+ * Cierra la sesión utilizando Firebase Authentication y elimina la cookie del usuario.
+ */
 export const logOut = async () => {
   try {
     await signOut(auth);
