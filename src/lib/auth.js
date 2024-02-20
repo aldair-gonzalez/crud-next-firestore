@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { cookies } from "next/headers";
 
 import { auth, db } from "./firebase/firebase";
@@ -74,11 +74,15 @@ export const signIn = async ({ email, password }) => {
   try {
     const userSigned = await signInWithEmailAndPassword(auth, email, password);
     auth.currentUser = userSigned.user;
+
+    const userDoc = await getDoc(doc(db, "usuarios", userSigned.user.uid));
+    const rol = (await getDoc(userDoc.data().rol)).data().nombre;
+
     const user = {
       token: userSigned.user.accessToken,
       email: userSigned.user.email,
       emailVerified: userSigned.user.emailVerified,
-      displayName: userSigned.user.displayName,
+      rol,
     };
 
     const expirationTime = new Date(
@@ -88,9 +92,10 @@ export const signIn = async ({ email, password }) => {
       expires: expirationTime,
       httpOnly: true,
       secure: true,
+      sameSite: "strict",
     });
   } catch (error) {
-    return { error: error.message, code: error.code };
+    throw error;
   }
 };
 
