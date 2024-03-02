@@ -1,14 +1,15 @@
 "use client";
 
-import { logOut } from "@/lib/auth";
 import Link from "next/link";
 
+import { signOut } from "@/lib/firebase/auth";
+import { useAuth } from "@/lib/firebase/useAuth";
+
 export default function Home() {
+  const auth = useAuth();
+
   const handleLogout = async () => {
-    const res = await logOut();
-    if (res) alert("Sesión cerrada");
-    else alert("Error al cerrar sesión");
-    return;
+    await signOut();
   };
 
   return (
@@ -22,9 +23,11 @@ export default function Home() {
         <Link href="/alumnos">Alumnos</Link>
         <Link href="/clases">Clases</Link>
       </div>
-      <button className="text-xs" onClick={() => handleLogout()}>
-        Cerrar sesión
-      </button>
+      {auth && (
+        <button className="text-xs" onClick={() => handleLogout()}>
+          Cerrar sesión
+        </button>
+      )}
     </main>
   );
 }
