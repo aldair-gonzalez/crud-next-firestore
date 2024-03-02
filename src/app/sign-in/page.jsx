@@ -4,13 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { signIn } from "@/lib/firebase/auth";
-import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -19,7 +17,7 @@ const Page = () => {
       await signIn({ email, password });
       setEmail("");
       setPassword("");
-      router.push("/");
+      window.location.href = "/";
     } catch (error) {
       alert(error.message);
     }
