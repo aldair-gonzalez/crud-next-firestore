@@ -1,12 +1,12 @@
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
-  signOut as signOutFirebase
+  signOut as signOutFirebase,
 } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
-import { auth } from "./firebase";
-import { createAlumno, createProfesor } from "./crud/create";
+import { auth, db } from "./firebase";
 
 export const signIn = async (user) => {
   try {
@@ -30,46 +30,72 @@ export const signIn = async (user) => {
   }
 };
 
-export const signUp = async ({ user, sendEmail, rolAsignado }) => {
+export const signUp = async ({
+  email,
+  password,
+  sendEmail,
+  rolAsignado,
+  ...rest
+}) => {
   try {
-    const userCreated = await createUserWithEmailAndPassword(
+    const createdUser = await createUserWithEmailAndPassword(
       auth,
-      user.email,
-      user.password
+      email,
+      password
     );
+
+    const firebaseUser = createdUser.user;
 
     await fetch("api/auth/custom-rol", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        "x-uid": userCreated.user.uid,
+        "x-uid": firebaseUser.uid,
         "x-rol": rolAsignado.nombre,
       },
     });
 
+    await setDoc(doc(db, "usuarios", firebaseUser.uid), {
+      email,
+      ...rest,
+      rol: doc(db, "roles", rolAsignado.id),
+    });
+
+    let collection;
+    let additionalData = {};
     switch (rolAsignado.nombre) {
       case "profesor":
-        await createProfesor(user);
+        collection = "profesores";
+        const instrumento = rest?.instrumento;
+        additionalData = {
+          instrumento: doc(db, "instrumentos", instrumento),
+        };
         break;
-
       case "alumno":
-        await createAlumno(user);
+        collection = "alumnos";
+        const profesor = rest?.profesor;
+        additionalData = { profesor: doc(db, "profesores", profesor) };
         break;
-
       default:
-        break;
+        return;
     }
 
-    sendEmail && (await sendEmailVerification(userCreated.user));
+    await setDoc(doc(db, collection, firebaseUser.uid), {
+      usuario: doc(db, "usuarios", firebaseUser.uid),
+      ...additionalData,
+    });
+
+    sendEmail && (await sendEmailVerification(firebaseUser));
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
 
 export const signOut = async () => {
   try {
-    await signOutFirebase(auth)
+    await signOutFirebase(auth);
     await fetch("api/auth/session", {
       method: "DELETE",
       headers: {
