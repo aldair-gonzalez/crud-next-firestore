@@ -55,28 +55,29 @@ const Page = () => {
     setSending(true);
     try {
       const getRol = await getRolById(rol);
+      const user = {
+        nombre,
+        apellido,
+        telefono,
+      };
+      if (instrumento) user.instrumento = instrumento;
+      if (profesor) user.profesor = profesor;
       await signUp({
-        user: {
-          email,
-          password,
-          nombre,
-          apellido,
-          telefono,
-          instrumento,
-          profesor,
-        },
+        email,
+        password,
         rolAsignado: getRol,
-        sendEmail: true
+        sendEmail: true,
+        ...user,
       });
 
-      setNombre("")
-      setApellido("")
-      setTelefono("")
-      setEmail("")
-      setPassword("")
-      setInstrumento("")
-      setProfesor("")
-      setRol("")
+      setNombre("");
+      setApellido("");
+      setTelefono("");
+      setEmail("");
+      setPassword("");
+      setInstrumento("");
+      setProfesor("");
+      setRol("");
       setIsRegister(true);
     } catch (error) {
       alert(error.message);
@@ -209,7 +210,11 @@ const Page = () => {
                 </div>
               ))}
             </div>
-            <button className={`Button ${sending && "Button-loading"}`} type="submit" disabled={sending}>
+            <button
+              className={`Button ${sending && "Button-loading"}`}
+              type="submit"
+              disabled={sending}
+            >
               Sign up
             </button>
           </form>
