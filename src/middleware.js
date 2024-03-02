@@ -1,20 +1,60 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
-export function middleware(request) {
-  const cookie = request.cookies.get("user");
-  const user = cookie ? JSON.parse(cookie.value) : null;
-  if (!user) return NextResponse.redirect(new URL("/sign-in", request.url));
-  if (!Boolean(user.emailVerified)) {
-    request.cookies.delete("user");
-    return NextResponse.redirect(new URL("/email-verified", request.url));
+import firebaseConfig from "./config/firebase.config";
+
+export const middleware = async (req) => {
+  const { pathname, origin } = req.nextUrl;
+  try {
+    const cookieSession = cookies().get(
+      firebaseConfig.SESSION_COOKIE_NAME
+    )?.value;
+
+    const data = await (
+      await fetch(`${origin}/api/auth/session`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Cookie: `${firebaseConfig.SESSION_COOKIE_NAME}=${cookieSession}`,
+        },
+      })
+    ).json();
+
+    if (!data.isLogged) {
+      return NextResponse.redirect(new URL("/sign-in", req.url));
+    }
+
+    if (!Boolean(data.email_verified)) {
+      return NextResponse.redirect(new URL("/email-verified", req.url));
+    }
+
+    if (
+      (pathname.startsWith("/usuarios") ||
+        pathname.startsWith("/roles") ||
+        pathname.startsWith("/alumnos")) &&
+      data.rol === "alumno"
+    ) {
+      return NextResponse.redirect(new URL("/no-autorizado", req.url));
+    }
+
+    if ((
+      pathname.startsWith("/usuarios") ||
+      pathname.startsWith("/roles")
+    ) && data.rol === "profesor") {
+      return NextResponse.redirect(new URL("/no-autorizado", req.url));
+    }
+
+    return NextResponse.next();
+  } catch (error) {
+    return NextResponse.redirect(new URL("/sign-in", req.url));
   }
-  return NextResponse.next();
-}
+};
 
 export const config = {
   matcher: [
     "/usuarios:path*",
     "/roles:path*",
+    "/profesores:path*",
     "/alumnos:path*",
     "/clases:path*",
   ],
