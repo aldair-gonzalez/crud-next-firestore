@@ -1,18 +1,20 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from 'firebase/firestore';
+import { getApp, getApps, initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
-import { firebaseConfig } from "@/config/config"
+import { firebaseConfig } from "@/config/config";
 
 const config = {
-  apiKey: firebaseConfig.NEXT_PUBLIC_API_KEY,
-  authDomain: firebaseConfig.NEXT_PUBLIC_AUTH_DOMAIN,
-  projectId: firebaseConfig.NEXT_PUBLIC_PROJECT_ID,
-  storageBucket: firebaseConfig.NEXT_PUBLIC_STORAGE_BUCKET,
-  messagingSenderId: firebaseConfig.NEXT_PUBLIC_MESSAGING_SENDER_ID,
-  appId: firebaseConfig.NEXT_PUBLIC_APP_ID
+  apiKey: firebaseConfig.API_KEY,
+  authDomain: firebaseConfig.AUTH_DOMAIN,
+  projectId: firebaseConfig.PROJECT_ID,
+  storageBucket: firebaseConfig.STORAGE_BUCKET,
+  messagingSenderId: firebaseConfig.MESSAGING_SENDER_ID,
+  appId: firebaseConfig.APP_ID,
 };
 
-const app = initializeApp(config);
+const app = getApps().length > 0 ? getApp() : initializeApp(config);
+const auth = getAuth(app);
 const db = getFirestore(app);
 
-export { app, db }
+export { auth, db };

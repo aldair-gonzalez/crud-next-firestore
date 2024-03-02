@@ -17,7 +17,7 @@ export const getInstrumentoById = async (id) => {
   try {
     const docRef = doc(db, "instrumentos", id);
     const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) return docSnap.data();
+    if (docSnap.exists()) return { id: docSnap.id, ...docSnap.data() };
     else throw new Error("Instrumento no encontrado");
   } catch (error) {
     console.error("Error getting instrumento: ", error);
@@ -41,7 +41,7 @@ export const getRolById = async (id) => {
   try {
     const docRef = doc(db, "roles", id);
     const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) return docSnap.data();
+    if (docSnap.exists()) return { id: docSnap.id, ...docSnap.data() };
     else throw new Error("Rol no encontrado");
   } catch (error) {
     console.error("Error getting rol: ", error);
@@ -69,7 +69,7 @@ export const getUsuarioById = async (id) => {
   try {
     const docRef = doc(db, "usuarios", id);
     const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) return docSnap.data();
+    if (docSnap.exists()) return { id: docSnap.id, ...docSnap.data() };
     else throw new Error("Usuario no encontrado");
   } catch (error) {
     console.error("Error getting usuario: ", error);
@@ -100,7 +100,7 @@ export const getProfesorById = async (id) => {
   try {
     const docRef = doc(db, "profesores", id);
     const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) return docSnap.data();
+    if (docSnap.exists()) return { id: docSnap.id, ...docSnap.data() };
     else throw new Error("Profesor no encontrado");
   } catch (error) {
     console.error("Error getting profesor: ", error);
@@ -142,7 +142,7 @@ export const getAlumnoById = async (id) => {
     const deudas = queryDeudasSnap.docs.map((doc) => {
       return { id: doc.id, ...doc.data() };
     });
-    
+
     for (const deuda of deudas) {
       const collectionDeudasPagosRef = collection(
         db,
@@ -155,7 +155,8 @@ export const getAlumnoById = async (id) => {
       deuda.pagos = pagos;
     }
 
-    if (docSnap.exists()) return { ...docSnap.data(), deudas, asistencias };
+    if (docSnap.exists())
+      return { id: docSnap.id, ...docSnap.data(), deudas, asistencias };
     else throw new Error("Alumno no encontrado");
   } catch (error) {
     console.error("Error getting alumno: ", error);
@@ -179,7 +180,7 @@ export const getClaseById = async (id) => {
   try {
     const docRef = doc(db, "clases", id);
     const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) return docSnap.data();
+    if (docSnap.exists()) return { id: docSnap.id, ...docSnap.data() };
     else throw new Error("Clase no encontrada");
   } catch (error) {
     console.error("Error getting clase: ", error);

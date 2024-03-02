@@ -1,9 +1,20 @@
+"use client";
+
 import Link from "next/link";
 
-export default function Home() {return (
+import { signOut } from "@/lib/firebase/auth";
+import { useAuth } from "@/lib/firebase/useAuth";
+
+export default function Home() {
+  const auth = useAuth();
+
+  const handleLogout = async () => {
+    await signOut();
+  };
+
+  return (
     <main className="flex items-center justify-center flex-col gap-10">
       CRUD
-
       <div className="flex items-center justify-center gap-5">
         <Link href="/instrumentos">Instrumentos</Link>
         <Link href="/roles">Roles</Link>
@@ -12,6 +23,11 @@ export default function Home() {return (
         <Link href="/alumnos">Alumnos</Link>
         <Link href="/clases">Clases</Link>
       </div>
+      {auth && (
+        <button className="text-xs" onClick={() => handleLogout()}>
+          Cerrar sesión
+        </button>
+      )}
     </main>
   );
 }

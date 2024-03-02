@@ -38,9 +38,7 @@ export const createProfesor = async (usuario) => {
       nombre: usuario.nombre,
       apellido: usuario.apellido,
       telefono: usuario.telefono,
-      email: usuario.email,
-      contrasena: usuario.contrasena,
-      rol: usuario.rol,
+      email: usuario.email
     };
 
     const docRef = collection(db, "usuarios");
@@ -88,7 +86,6 @@ export const createAlumno = async (usuario) => {
       apellido: usuario.apellido,
       telefono: usuario.telefono,
       email: usuario.email,
-      contrasena: usuario.contrasena,
       profesor: usuario.profesor,
     };
 
