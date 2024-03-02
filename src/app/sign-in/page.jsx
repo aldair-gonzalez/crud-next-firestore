@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import { signIn } from "@/lib/auth";
+import { signIn } from "@/lib/firebase/auth";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
