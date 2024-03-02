@@ -1,6 +1,6 @@
 "use client";
 
-import { signUp } from "@/lib/auth";
+import { signUp } from "@/lib/firebase/auth";
 import {
   getAllInstrumentos,
   getAllProfesores,
@@ -29,6 +29,7 @@ const Page = () => {
 
   const [isRegister, setIsRegister] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -51,23 +52,36 @@ const Page = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setSending(true);
     try {
       const getRol = await getRolById(rol);
       await signUp({
-        email,
-        password,
-        rolAsigned: getRol,
-        nombre,
-        apellido,
-        telefono,
-        instrumento,
-        profesor,
+        user: {
+          email,
+          password,
+          nombre,
+          apellido,
+          telefono,
+          instrumento,
+          profesor,
+        },
+        rolAsignado: getRol,
+        sendEmail: true
       });
-      alert("Te enviamos un correo para que verifiques tu cuenta.")
+
+      setNombre("")
+      setApellido("")
+      setTelefono("")
+      setEmail("")
+      setPassword("")
+      setInstrumento("")
+      setProfesor("")
+      setRol("")
       setIsRegister(true);
     } catch (error) {
       alert(error.message);
     }
+    setSending(false);
   };
 
   return (
@@ -105,7 +119,7 @@ const Page = () => {
                   type="tel"
                   pattern="[0-9]{10}"
                   name="telefono"
-                  placeholder="Teléfono"
+                  placeholder="0000000000"
                   onChange={(e) => setTelefono(e.target.value)}
                   value={telefono}
                 />
@@ -195,7 +209,7 @@ const Page = () => {
                 </div>
               ))}
             </div>
-            <button className="Button" type="submit">
+            <button className={`Button ${sending && "Button-loading"}`} type="submit" disabled={sending}>
               Sign up
             </button>
           </form>
