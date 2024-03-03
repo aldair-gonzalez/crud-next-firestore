@@ -10,6 +10,18 @@ export const middleware = async (req) => {
       firebaseConfig.SESSION_COOKIE_NAME
     )?.value;
 
+    if (
+        (pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up")) &&
+        !cookieSession
+    ) {
+      return NextResponse.next();
+    } else if (
+      (pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up")) &&
+      cookieSession
+    ) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
     const data = await (
       await fetch(`${origin}/api/auth/session`, {
         headers: {
@@ -29,6 +41,13 @@ export const middleware = async (req) => {
     }
 
     if (
+      Boolean(data.email_verified) &&
+      pathname.startsWith("/email-verified")
+    ) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
+    if (
       (pathname.startsWith("/usuarios") ||
         pathname.startsWith("/roles") ||
         pathname.startsWith("/alumnos")) &&
@@ -37,10 +56,10 @@ export const middleware = async (req) => {
       return NextResponse.redirect(new URL("/no-autorizado", req.url));
     }
 
-    if ((
-      pathname.startsWith("/usuarios") ||
-      pathname.startsWith("/roles")
-    ) && data.rol === "profesor") {
+    if (
+      (pathname.startsWith("/usuarios") || pathname.startsWith("/roles")) &&
+      data.rol === "profesor"
+    ) {
       return NextResponse.redirect(new URL("/no-autorizado", req.url));
     }
 
@@ -52,6 +71,8 @@ export const middleware = async (req) => {
 
 export const config = {
   matcher: [
+    "/sign-in",
+    "/sign-up",
     "/usuarios:path*",
     "/roles:path*",
     "/profesores:path*",
