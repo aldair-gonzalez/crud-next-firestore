@@ -24,10 +24,19 @@ export default function Home() {
         <Link href="/alumnos">Alumnos</Link>
         <Link href="/clases">Clases</Link>
       </div>
-      {auth && (
+      {auth ? (
         <button className="text-xs" onClick={() => handleLogout()}>
           Cerrar sesión
         </button>
+      ) : (
+          <ul className=" text-xs flex gap-5">
+            <li>
+              <Link href="/sign-in">Iniciar sesión</Link>
+            </li>
+            <li>
+              <Link href="/sign-up">Crear cuenta</Link>
+            </li>
+          </ul>
       )}
     </main>
   );
