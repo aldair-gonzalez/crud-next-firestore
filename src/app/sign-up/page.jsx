@@ -16,14 +16,15 @@ import Loader from "../components/Loader";
 const Page = () => {
   const [roles, setRoles] = useState(null);
   const [profesores, setProfesores] = useState(null);
-  const [instrumentos, setInstrumentos] = useState(null);
+  const [allInstrumentos, setAllInstrumentos] = useState(null);
 
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [instrumento, setInstrumento] = useState();
+  const [instrumentos, setInstrumentos] = useState([]);
+  const [inputInstrumentos, setInputInstrumentos] = useState(1);
   const [profesor, setProfesor] = useState();
   const [rol, setRol] = useState();
 
@@ -45,10 +46,23 @@ const Page = () => {
       }
       setRoles(fetchRoles);
       setProfesores(fetchProfesores);
-      setInstrumentos(fetchInstrumentos);
+      setAllInstrumentos(fetchInstrumentos);
       setLoading(false);
     })();
   }, []);
+
+  const handleInstrumentoChange = (index, value) => {
+    setInstrumentos((prevInstrumentos) => {
+      const newInstrumentos = [...prevInstrumentos];
+      newInstrumentos[index] = value;
+      const uniqueInstrumentos = Array.from(new Set(newInstrumentos));
+      return uniqueInstrumentos;
+    });
+  };
+
+  const handleAddInstrumento = () => {
+    setInputInstrumentos(inputInstrumentos + 1);
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -60,8 +74,8 @@ const Page = () => {
         apellido,
         telefono,
       };
-      if (instrumento) user.instrumento = instrumento;
-      if (profesor) user.profesor = profesor;
+      if (instrumentos) user.instrumentosId = instrumentos;
+      if (profesor) user.profesorId = profesor;
       await signUp({
         email,
         password,
@@ -75,11 +89,12 @@ const Page = () => {
       setTelefono("");
       setEmail("");
       setPassword("");
-      setInstrumento("");
+      setInstrumentos("");
       setProfesor("");
       setRol("");
       setIsRegister(true);
     } catch (error) {
+      console.log(error);
       alert(error.message);
     }
     setSending(false);
@@ -167,22 +182,34 @@ const Page = () => {
                 <div key={i}>
                   {doc.id === rol && doc.nombre === "profesor" && (
                     <div className="Input">
-                      <label htmlFor="instrumento">Instrumento</label>
-                      <select
-                        name="instrumento"
-                        className="Select"
-                        defaultValue="DEFAULT"
-                        onChange={(e) => setInstrumento(e.target.value)}
-                      >
-                        <option value="DEFAULT" disabled>
-                          Seleccionar
-                        </option>
-                        {instrumentos.map((instrumento) => (
-                          <option key={instrumento.id} value={instrumento.id}>
-                            {instrumento.nombre}
+                      <label htmlFor="instrumento">Instrumentos</label>
+                      {Array.from(Array(inputInstrumentos).keys()).map((i) => (
+                        <select
+                          key={i}
+                          name="instrumento"
+                          className="Select"
+                          defaultValue=""
+                          onChange={(e) => {
+                            handleInstrumentoChange(i, e.target.value);
+                          }}
+                        >
+                          <option value="" disabled>
+                            Seleccionar
                           </option>
-                        ))}
-                      </select>
+                          {allInstrumentos.map((instrumento) => (
+                            <option key={instrumento.id} value={instrumento.id}>
+                              {instrumento.nombre}
+                            </option>
+                          ))}
+                        </select>
+                      ))}
+                      <button
+                        className="Button"
+                        type="button"
+                        onClick={handleAddInstrumento}
+                      >
+                        Agregar instrumento
+                      </button>
                     </div>
                   )}
                   {doc.id === rol && doc.nombre === "alumno" && (
