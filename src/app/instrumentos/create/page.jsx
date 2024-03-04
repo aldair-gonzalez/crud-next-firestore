@@ -15,7 +15,7 @@ const Page = () => {
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData);
     const fetch = await createInstrumento(data);
-    if(!fetch.error) e.target.reset()
+    if(!fetch?.error) e.target.reset()
     else alert(fetch.error)
     setLoading(false);
   };
