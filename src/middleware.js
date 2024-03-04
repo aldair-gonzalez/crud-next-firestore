@@ -11,8 +11,8 @@ export const middleware = async (req) => {
     )?.value;
 
     if (
-        (pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up")) &&
-        !cookieSession
+      (pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up")) &&
+      !cookieSession
     ) {
       return NextResponse.next();
     } else if (
@@ -32,8 +32,22 @@ export const middleware = async (req) => {
       })
     ).json();
 
+    if (data?.error && data?.code === "auth/user-not-found") {
+      return NextResponse.redirect(new URL("/sign-in", req.url), {
+        headers: {
+          "Set-Cookie": `${firebaseConfig.SESSION_COOKIE_NAME}=; Path=/; Max-Age=0`,
+          "Cache-Control": "no-store",
+        },
+      });
+    }
+
     if (!data.isLogged) {
-      return NextResponse.redirect(new URL("/sign-in", req.url));
+      return NextResponse.redirect(new URL("/sign-in", req.url), {
+        headers: {
+          "Set-Cookie": `${firebaseConfig.SESSION_COOKIE_NAME}=; Path=/; Max-Age=0`,
+          "Cache-Control": "no-store",
+        },
+      });
     }
 
     if (!Boolean(data.email_verified)) {
@@ -65,7 +79,12 @@ export const middleware = async (req) => {
 
     return NextResponse.next();
   } catch (error) {
-    return NextResponse.redirect(new URL("/sign-in", req.url));
+    return NextResponse.redirect(new URL("/sign-in", req.url), {
+      headers: {
+        "Set-Cookie": `${firebaseConfig.SESSION_COOKIE_NAME}=; Path=/; Max-Age=0`,
+        "Cache-Control": "no-store",
+      },
+    });
   }
 };
 
