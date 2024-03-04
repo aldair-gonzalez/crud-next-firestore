@@ -37,8 +37,7 @@ export const InstrumentoConverter = {
 export const UsuarioConverter = {
   toFirestore: (usuario) => {
     return {
-      nombre: usuario.nombre,
-      apellido: usuario.apellido,
+      full_name: usuario.full_name,
       email: usuario.email,
       telefono: usuario.telefono,
       rol: usuario.rol,
@@ -99,17 +98,17 @@ export const ClaseConverter = {
 export const AlumnoConverter = {
   toFirestore: (alumno) => {
     return {
-      usuario: alumno.usuario,
-      profesor: alumno.profesor,
-      instrumentos: alumno.instrumentos,
+      usuarioUid: alumno.usuarioUid,
+      profesorId: alumno.profesorId,
+      instrumentosId: alumno.instrumentosId,
     };
   },
   fromFirestore: (snapshot, options) => {
     const data = snapshot.data(options);
     return new Alumno({
-      usuario: data.usuario,
-      profesor: data.profesor,
-      instrumentos: data.instrumentos,
+      usuarioUid: data.usuarioUid,
+      profesorId: data.profesorId,
+      instrumentosId: data.instrumentosId,
     });
   },
 };
