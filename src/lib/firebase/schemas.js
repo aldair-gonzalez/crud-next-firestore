@@ -46,17 +46,17 @@ export class Usuario {
 
 export class Profesor {
   constructor({ usuario, instrumentos }) {
-    this.usuario = this.parseUsuarioRef(usuario);
+    this.usuario = this.parseUsuarioRef({ usuario });
     this.instrumentos = this.parseInstrumentosRef({ instrumentos });
   }
 
   parseUsuarioRef({ usuario }) {
-    return doc(db, "usuarios", usuario.id);
+    return doc(db, "usuarios", usuario);
   }
 
   parseInstrumentosRef({ instrumentos }) {
-    return instrumentos.map((instrumento) => {
-      return doc(db, "instrumentos", instrumento.id);
+    return instrumentos.map((instrumentoId) => {
+      return doc(db, "instrumentos", instrumentoId);
     });
   }
 }
@@ -81,23 +81,23 @@ export class Clase {
 }
 
 export class Alumno {
-  constructor({ usuario, profesor, instrumentos }) {
-    this.usuario = this.parseUsuarioRef({ usuario });
-    this.profesor = this.parseProfesorRef({ profesor });
-    this.instrumentos = this.parseInstrumentosRef({ instrumentos });
+  constructor({ usuarioUid, profesorId, instrumentosId }) {
+    this.usuarioUid = this.parseUsuarioRef({ usuarioUid });
+    this.profesorId = this.parseProfesorRef({ profesorId });
+    this.instrumentosId = this.parseInstrumentosRef({ instrumentosId });
   }
 
-  parseUsuarioRef({ usuario }) {
-    return doc(db, "usuarios", usuario.id);
+  parseUsuarioRef({ usuarioUid }) {
+    return doc(db, "usuarios", usuarioUid);
   }
 
-  parseProfesorRef({ profesor }) {
-    return doc(db, "profesores", profesor.id);
+  parseProfesorRef({ profesorId }) {
+    return doc(db, "profesores", profesorId);
   }
 
-  parseInstrumentosRef({ instrumentos }) {
-    return instrumentos.map((instrumento) => {
-      return doc(db, "instrumentos", instrumento.id);
+  parseInstrumentosRef({ instrumentosId }) {
+    return instrumentosId.map((instrumentoId) => {
+      return doc(db, "instrumentos", instrumentoId);
     });
   }
 }
