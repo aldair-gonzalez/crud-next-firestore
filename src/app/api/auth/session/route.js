@@ -15,6 +15,7 @@ export const GET = async () => {
       firebaseConfig.SESSION_COOKIE_NAME
     )?.value;
     const sessionCookie = await auth().verifySessionCookie(cookieSession);
+    await auth().getUser(sessionCookie.uid);
 
     return NextResponse.json(
       {
@@ -22,12 +23,12 @@ export const GET = async () => {
         rol: sessionCookie.rol,
         email_verified: sessionCookie.email_verified,
       },
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      { status: 200 }
     );
   } catch (error) {
     return NextResponse.json(
-      { isLogged: false, error: error.message },
-      { status: 400, headers: { "Content-Type": "application/json" } }
+      { isLogged: false, error: error.message, code: error.code },
+      { status: 500 }
     );
   }
 };
@@ -41,7 +42,7 @@ export const POST = async () => {
     if (!(new Date().getTime() / 1000 - decodedIdToken.auth_time < 5 * 60)) {
       return NextResponse.json(
         { isLogged: false, error: "Token expired" },
-        { status: 401, headers: { "Content-Type": "application/json" } }
+        { status: 401 }
       );
     }
 
@@ -57,14 +58,11 @@ export const POST = async () => {
       sameSite: "strict",
     });
 
-    return NextResponse.json(
-      { isLogged: true },
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
+    return NextResponse.json({ isLogged: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { isLogged: false, error: error.message },
-      { status: 400, headers: { "Content-Type": "application/json" } }
+      { status: 400 }
     );
   }
 };
@@ -73,15 +71,11 @@ export const POST = async () => {
 export const DELETE = async () => {
   try {
     cookies().delete(firebaseConfig.SESSION_COOKIE_NAME);
-
-    return NextResponse.json(
-      { isLogged: false },
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
+    return NextResponse.json({ isLogged: false }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { isLogged: false, error: error.message },
-      { status: 400, headers: { "Content-Type": "application/json" } }
+      { status: 400 }
     );
   }
 };
