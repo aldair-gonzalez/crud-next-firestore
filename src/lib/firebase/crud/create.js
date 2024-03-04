@@ -5,28 +5,34 @@ import {
   doc,
   getDocs,
   query,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { where } from "firebase/firestore";
 
+import { Instrumento } from "../schemas";
+import { InstrumentoConverter } from "../schemas.converters";
+
 export const createInstrumento = async (instrumento) => {
   try {
-    instrumento.nombre = instrumento.nombre.trim();
-    instrumento.nombre = instrumento.nombre.toLowerCase();
-
-    if (!instrumento.nombre)
+    const setInstrumento = new Instrumento({ nombre: instrumento.nombre });
+    if (!setInstrumento.nombre) {
       throw new Error("El nombre del instrumento es obligatorio");
-    const docRef = collection(db, "instrumentos");
-    const q = query(docRef, where("nombre", "==", instrumento.nombre));
+    }
+    const docRef = collection(db, "instrumentos").withConverter(InstrumentoConverter);
+    const q = query(docRef, where("nombre", "==", setInstrumento.nombre));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       if (doc.data().nombre == instrumento.nombre)
         throw new Error("El instrumento ya existe");
     });
 
-    const docSnap = await addDoc(docRef, instrumento);
-    if (docSnap) return { ...instrumento, id: docSnap.id };
-    else throw new Error("Error al crear instrumento");
+    const docSnap = await addDoc(docRef, setInstrumento);
+    if (docSnap) {
+      return { ...instrumento, id: docSnap.id };
+    } else {
+      throw new Error("Error al crear instrumento");
+    }
   } catch (error) {
     return { error: error.message };
   }
@@ -38,7 +44,7 @@ export const createProfesor = async (usuario) => {
       nombre: usuario.nombre,
       apellido: usuario.apellido,
       telefono: usuario.telefono,
-      email: usuario.email
+      email: usuario.email,
     };
 
     const docRef = collection(db, "usuarios");
