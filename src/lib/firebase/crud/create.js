@@ -17,9 +17,9 @@ import {
   InstrumentoConverter,
 } from "../schemas.converters";
 
-export const createInstrumento = async (instrumento) => {
+export const createInstrumento = async ({ nombre }) => {
   try {
-    const setInstrumento = new Instrumento({ nombre: instrumento.nombre });
+    const setInstrumento = new Instrumento({ nombre });
     if (!setInstrumento.nombre) {
       throw new Error("El nombre del instrumento es obligatorio");
     }
@@ -35,7 +35,7 @@ export const createInstrumento = async (instrumento) => {
 
     const docSnap = await addDoc(docRef, setInstrumento);
     if (docSnap) {
-      return { ...instrumento, id: docSnap.id };
+      return { ...setInstrumento, id: docSnap.id };
     } else {
       throw new Error("Error al crear instrumento");
     }
@@ -44,22 +44,29 @@ export const createInstrumento = async (instrumento) => {
   }
 };
 
-export const createClase = async (clase) => {
+export const createClase = async ({
+  fecha,
+  hora_inicio,
+  hora_fin,
+  profesor,
+  instrumento,
+  status,
+}) => {
   try {
     const setClase = new Clase({
-      fecha: clase.fecha,
-      hora_inicio: clase.hora_inicio,
-      hora_fin: clase.hora_fin,
-      profesor: clase.profesor,
-      instrumento: clase.instrumento,
-      status: clase.status,
+      fecha,
+      hora_inicio,
+      hora_fin,
+      profesor,
+      instrumento,
+      status,
     });
 
     const docRef = collection(db, "clases").withConverter(ClaseConverter);
     const docSnap = await addDoc(docRef, setClase);
 
     if (docSnap) {
-      return { ...clase, id: docSnap.id };
+      return { ...setClase, id: docSnap.id };
     } else {
       throw new Error("Error al crear clase");
     }
