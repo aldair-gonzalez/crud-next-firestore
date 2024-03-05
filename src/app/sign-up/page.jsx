@@ -40,9 +40,11 @@ const Page = () => {
       const fetchInstrumentos = await getAllInstrumentos();
       for (const profesor of fetchProfesores) {
         profesor.usuario = await getUsuarioById(profesor.usuario.id);
-        profesor.instrumento = await getInstrumentoById(
-          profesor.instrumento.id
-        );
+        const instrumentos = []
+        for (const instrumento of profesor.instrumentos) {
+          instrumentos.push(await getInstrumentoById(instrumento.id));
+        }
+        profesor.instrumentos = instrumentos;
       }
       setRoles(fetchRoles);
       setProfesores(fetchProfesores);
@@ -180,38 +182,44 @@ const Page = () => {
               </div>
               {roles.map((doc, i) => (
                 <div key={i}>
-                  {doc.id === rol && doc.nombre === "profesor" && (
-                    <div className="Input">
-                      <label htmlFor="instrumento">Instrumentos</label>
-                      {Array.from(Array(inputInstrumentos).keys()).map((i) => (
-                        <select
-                          key={i}
-                          name="instrumento"
-                          className="Select"
-                          defaultValue=""
-                          onChange={(e) => {
-                            handleInstrumentoChange(i, e.target.value);
-                          }}
+                  {doc.id === rol &&
+                    (doc.nombre === "profesor" || doc.nombre === "alumno") && (
+                      <div className="Input">
+                        <label htmlFor="instrumento">Instrumentos</label>
+                        {Array.from(Array(inputInstrumentos).keys()).map(
+                          (i) => (
+                            <select
+                              key={i}
+                              name="instrumento"
+                              className="Select"
+                              defaultValue=""
+                              onChange={(e) => {
+                                handleInstrumentoChange(i, e.target.value);
+                              }}
+                            >
+                              <option value="" disabled>
+                                Seleccionar
+                              </option>
+                              {allInstrumentos.map((instrumento) => (
+                                <option
+                                  key={instrumento.id}
+                                  value={instrumento.id}
+                                >
+                                  {instrumento.nombre}
+                                </option>
+                              ))}
+                            </select>
+                          )
+                        )}
+                        <button
+                          className="Button"
+                          type="button"
+                          onClick={handleAddInstrumento}
                         >
-                          <option value="" disabled>
-                            Seleccionar
-                          </option>
-                          {allInstrumentos.map((instrumento) => (
-                            <option key={instrumento.id} value={instrumento.id}>
-                              {instrumento.nombre}
-                            </option>
-                          ))}
-                        </select>
-                      ))}
-                      <button
-                        className="Button"
-                        type="button"
-                        onClick={handleAddInstrumento}
-                      >
-                        Agregar instrumento
-                      </button>
-                    </div>
-                  )}
+                          Agregar instrumento
+                        </button>
+                      </div>
+                    )}
                   {doc.id === rol && doc.nombre === "alumno" && (
                     <div className="Input">
                       <label htmlFor="profesor">Profesor</label>
@@ -226,9 +234,11 @@ const Page = () => {
                         </option>
                         {profesores.map((profesor) => (
                           <option key={profesor.id} value={profesor.id}>
-                            {profesor.usuario.nombre}{" "}
-                            {profesor.usuario.apellido} -{" "}
-                            {profesor.instrumento.nombre}
+                            {profesor.usuario.full_name.nombre}{" "}
+                            {profesor.usuario.full_name.apellido} -{" "}
+                            {profesor.instrumentos.map(
+                              (instrumento) => `(${instrumento.nombre}) `
+                            )}
                           </option>
                         ))}
                       </select>
