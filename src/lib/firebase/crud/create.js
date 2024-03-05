@@ -2,10 +2,17 @@ import { addDoc, collection, getDocs, query } from "firebase/firestore";
 import { db } from "../firebase";
 import { where } from "firebase/firestore";
 
-import { AlumnoAsistencia, AlumnoDeuda, Clase, Instrumento } from "../schemas";
+import {
+  AlumnoAsistencia,
+  AlumnoDeuda,
+  AlumnoDeudaPago,
+  Clase,
+  Instrumento,
+} from "../schemas";
 import {
   AlumnoAsistenciaConverter,
   AlumnoDeudaConverter,
+  AlumnoDeudaPagoConverter,
   ClaseConverter,
   InstrumentoConverter,
 } from "../schemas.converters";
@@ -106,6 +113,34 @@ export const createAlumnoDeuda = async ({
       return { ...setDeuda, id: docSnap.id };
     } else {
       throw new Error("Error al crear deuda");
+    }
+  } catch (error) {
+    return { error: error.message };
+  }
+};
+
+export const createAlumnoDeudaPago = async ({
+  alumnoId,
+  deudaId,
+  fecha,
+  monto_pagado,
+}) => {
+  try {
+    const setPago = new AlumnoDeudaPago({
+      fecha,
+      monto_pagado,
+    });
+
+    const docRef = collection(
+      db,
+      `alumnos/${alumnoId}/deudas/${deudaId}/pagos`
+    ).withConverter(AlumnoDeudaPagoConverter);
+    const docSnap = await addDoc(docRef, setPago);
+
+    if (docSnap) {
+      return { ...setPago, id: docSnap.id };
+    } else {
+      throw new Error("Error al crear pago");
     }
   } catch (error) {
     return { error: error.message };
