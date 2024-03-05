@@ -2,9 +2,10 @@ import { addDoc, collection, getDocs, query } from "firebase/firestore";
 import { db } from "../firebase";
 import { where } from "firebase/firestore";
 
-import { AlumnoAsistencia, Clase, Instrumento } from "../schemas";
+import { AlumnoAsistencia, AlumnoDeuda, Clase, Instrumento } from "../schemas";
 import {
   AlumnoAsistenciaConverter,
+  AlumnoDeudaConverter,
   ClaseConverter,
   InstrumentoConverter,
 } from "../schemas.converters";
@@ -77,6 +78,34 @@ export const createAlumnoAsistencia = async ({ alumnoId, clase, status }) => {
       return { ...setAsistencia, id: docSnap.id };
     } else {
       throw new Error("Error al crear asistencia");
+    }
+  } catch (error) {
+    return { error: error.message };
+  }
+};
+
+export const createAlumnoDeuda = async ({
+  alumnoId,
+  fecha,
+  monto_total,
+  status,
+}) => {
+  try {
+    const setDeuda = new AlumnoDeuda({
+      fecha,
+      monto_total,
+      status,
+    });
+
+    const docRef = collection(db, `alumnos/${alumnoId}/deudas`).withConverter(
+      AlumnoDeudaConverter
+    );
+    const docSnap = await addDoc(docRef, setDeuda);
+
+    if (docSnap) {
+      return { ...setDeuda, id: docSnap.id };
+    } else {
+      throw new Error("Error al crear deuda");
     }
   } catch (error) {
     return { error: error.message };
