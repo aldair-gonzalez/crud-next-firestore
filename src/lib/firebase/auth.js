@@ -104,30 +104,6 @@ export const signUp = async ({
         return;
     }
 
-    // let collection;
-    // let additionalData = {};
-    // switch (rolAsignado.nombre) {
-    //   case "profesor":
-    //     collection = "profesores";
-    //     const instrumento = rest?.instrumento;
-    //     additionalData = {
-    //       instrumento: doc(db, "instrumentos", instrumento),
-    //     };
-    //     break;
-    //   case "alumno":
-    //     collection = "alumnos";
-    //     const profesor = rest?.profesor;
-    //     additionalData = { profesor: doc(db, "profesores", profesor) };
-    //     break;
-    //   default:
-    //     return;
-    // }
-
-    // await setDoc(doc(db, collection, firebaseUser.uid), {
-    //   usuario: doc(db, "usuarios", firebaseUser.uid),
-    //   ...additionalData,
-    // });
-
     sendEmail && (await sendEmailVerification(firebaseUser));
   } catch (error) {
     throw error;
