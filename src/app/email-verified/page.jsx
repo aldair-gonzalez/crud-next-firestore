@@ -1,11 +1,17 @@
 "use client";
 
-import { verifyEmailAccount } from "@/lib/firebase/auth";
-import Link from "next/link";
+import { signOut, verifyEmailAccount } from "@/lib/firebase/auth";
+import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
+  const router = useRouter()
+
   const handleVerifyEmail = async () => {
     await verifyEmailAccount();
+  };
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/sign-in");
   };
 
   return (
@@ -15,11 +21,11 @@ const page = () => {
         <button onClick={() => handleVerifyEmail()}>
           Enviar correo de verificación
         </button>
-        <Link href="/sign-in">
+        <button onClick={() => handleLogout()}>
           Inicia sesión nuevamente con tu cuenta verificada
-        </Link>
+        </button>
       </div>
     </section>
   );
 };
-export default page;
+export default Page;
