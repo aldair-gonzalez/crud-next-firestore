@@ -1,10 +1,11 @@
 "use client";
 
-import Loader from "@/app/components/Loader";
-import { deleteUserAsAdmin } from "@/lib/firebase/actions.admin";
-import { getUsuarioById } from "@/lib/firebase/crud/read";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import Loader from "@/app/components/Loader";
+import { getUsuarioById } from "@/lib/firebase/crud/read";
+import { deleteUserAsAdmin } from "@/lib/firebase/actions.admin";
 
 const Page = ({ params }) => {
   const router = useRouter();
@@ -45,9 +46,11 @@ const Page = ({ params }) => {
       ) : (
         <>
           <h1>
-            {data.nombre} {data.apellido}
+            {data.full_name.nombre} {data.full_name.apellido}
           </h1>
-          <button onClick={handleDeleteUser}>Eliminar usuario</button>
+          <button className="Button" onClick={handleDeleteUser}>
+            Eliminar usuario
+          </button>
         </>
       )}
 
