@@ -8,7 +8,6 @@ export const getAllInstrumentos = async () => {
       return { id: doc.id, ...doc.data() };
     });
   } catch (error) {
-    console.error("Error getting alumnos: ", error);
     return null;
   }
 };
@@ -20,7 +19,6 @@ export const getInstrumentoById = async (id) => {
     if (docSnap.exists()) return { id: docSnap.id, ...docSnap.data() };
     else throw new Error("Instrumento no encontrado");
   } catch (error) {
-    console.error("Error getting instrumento: ", error);
     return null;
   }
 };
@@ -32,7 +30,6 @@ export const getAllRoles = async () => {
       return { id: doc.id, ...doc.data() };
     });
   } catch (error) {
-    console.error("Error getting roles: ", error);
     return null;
   }
 };
@@ -44,7 +41,6 @@ export const getRolById = async (id) => {
     if (docSnap.exists()) return { id: docSnap.id, ...docSnap.data() };
     else throw new Error("Rol no encontrado");
   } catch (error) {
-    console.error("Error getting rol: ", error);
     return null;
   }
 };
@@ -60,7 +56,6 @@ export const getAllUsuarios = async () => {
     );
     return usuarios;
   } catch (error) {
-    console.error("Error getting usuarios: ", error);
     return null;
   }
 };
@@ -72,7 +67,6 @@ export const getUsuarioById = async (id) => {
     if (docSnap.exists()) return { id: docSnap.id, ...docSnap.data() };
     else throw new Error("Usuario no encontrado");
   } catch (error) {
-    console.error("Error getting usuario: ", error);
     return null;
   }
 };
@@ -91,7 +85,6 @@ export const getAllProfesores = async () => {
     );
     return profesores;
   } catch (error) {
-    console.error("Error getting profesores: ", error);
     return null;
   }
 };
@@ -103,7 +96,6 @@ export const getProfesorById = async (id) => {
     if (docSnap.exists()) return { id: docSnap.id, ...docSnap.data() };
     else throw new Error("Profesor no encontrado");
   } catch (error) {
-    console.error("Error getting profesor: ", error);
     return null;
   }
 };
@@ -119,7 +111,6 @@ export const getAllAlumnos = async () => {
     );
     return alumnos;
   } catch (error) {
-    console.error("Error getting alumnos: ", error);
     return null;
   }
 };
@@ -159,7 +150,6 @@ export const getAlumnoById = async (id) => {
       return { id: docSnap.id, ...docSnap.data(), deudas, asistencias };
     else throw new Error("Alumno no encontrado");
   } catch (error) {
-    console.error("Error getting alumno: ", error);
     return null;
   }
 };
@@ -171,7 +161,6 @@ export const getAllClases = async () => {
       return { id: doc.id, ...doc.data() };
     });
   } catch (error) {
-    console.error("Error getting clases: ", error);
     return null;
   }
 };
@@ -183,7 +172,6 @@ export const getClaseById = async (id) => {
     if (docSnap.exists()) return { id: docSnap.id, ...docSnap.data() };
     else throw new Error("Clase no encontrada");
   } catch (error) {
-    console.error("Error getting clase: ", error);
     return null;
   }
 };
