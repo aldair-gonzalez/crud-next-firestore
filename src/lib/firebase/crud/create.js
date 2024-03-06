@@ -1,6 +1,5 @@
-import { addDoc, collection, getDocs, query } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
-import { where } from "firebase/firestore";
 
 import {
   AlumnoAsistencia,
