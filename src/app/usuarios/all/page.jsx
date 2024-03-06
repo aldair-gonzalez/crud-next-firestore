@@ -48,7 +48,7 @@ const Page = () => {
               <tr key={usuario.id} className="Row">
                 <td>{usuario.id}</td>
                 <td>
-                  {usuario.nombre} {usuario.apellido}
+                  {usuario.full_name.nombre} {usuario.full_name.apellido}
                 </td>
                 <td>{usuario.telefono}</td>
                 <th scope="row">{usuario.email}</th>
