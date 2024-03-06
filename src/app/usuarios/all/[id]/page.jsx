@@ -1,6 +1,7 @@
 "use client";
 
 import Loader from "@/app/components/Loader";
+import { deleteUserAsAdmin } from "@/lib/firebase/actions.admin";
 import { getUsuarioById } from "@/lib/firebase/crud/read";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -17,11 +18,25 @@ const Page = ({ params }) => {
       const fetch = await getUsuarioById(params.id);
       if (fetch) {
         setData(fetch);
-        console.log(fetch)
-      } else setData(null);
+      } else {
+        router.push("/404");
+        setData(null);
+      }
       setLoading(false);
     })();
-  }, [params.id]);
+  }, [params.id, router]);
+
+  const handleDeleteUser = async () => {
+    try {
+      await deleteUserAsAdmin({ uid: params.id });
+      alert("Usuario eliminado");
+      router.push("/usuarios/all");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  if (!data) return <Loader />;
 
   return (
     <section className="Section">
@@ -29,7 +44,10 @@ const Page = ({ params }) => {
         <Loader />
       ) : (
         <>
-          <h1>{data.nombre} {data.apellido}</h1>
+          <h1>
+            {data.nombre} {data.apellido}
+          </h1>
+          <button onClick={handleDeleteUser}>Eliminar usuario</button>
         </>
       )}
 
