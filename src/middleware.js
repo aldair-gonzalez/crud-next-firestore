@@ -77,6 +77,10 @@ export const middleware = async (req) => {
       return NextResponse.redirect(new URL("/no-autorizado", req.url));
     }
 
+    if (pathname.startsWith("/api/admin") && data.rol !== "admin") {
+      return NextResponse.redirect(new URL("/no-autorizado", req.url));
+    }
+
     return NextResponse.next();
   } catch (error) {
     return NextResponse.redirect(new URL("/sign-in", req.url), {
@@ -92,10 +96,11 @@ export const config = {
   matcher: [
     "/sign-in",
     "/sign-up",
-    "/usuarios:path*",
-    "/roles:path*",
-    "/profesores:path*",
-    "/alumnos:path*",
-    "/clases:path*",
+    "/usuarios/:path*",
+    "/roles/:path*",
+    "/profesores/:path*",
+    "/alumnos/:path*",
+    "/clases/:path*",
+    "/api/admin/:path*",
   ],
 };
